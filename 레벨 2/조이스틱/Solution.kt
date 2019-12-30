@@ -20,6 +20,7 @@ class Solution {
         }
 
         answer += exp
+
         return answer
     }
 }
