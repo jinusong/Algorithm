@@ -1,52 +1,53 @@
 import java.util.*
-import kotlin.collections.ArrayList
-
 
 class Solution {
     fun solution(answers: IntArray): IntArray {
-        var answer = ArrayList<Int>()
-        val firstStudentAnswers = arrayListOf(1, 2, 3, 4, 5)
-        val secondStudentAnswers = arrayListOf(2, 1, 2, 3, 2, 4, 2, 5)
-        val thirdStudentAnswers = arrayListOf(3, 3, 1, 1, 2, 2, 4, 4, 5, 5)
+        var answer = arrayListOf<Int>()
+        val firstArrayList = arrayListOf(1, 2, 3, 4, 5)
+        val secondArrayList = arrayListOf(2, 1, 2, 3, 2, 4, 2, 5)
+        val thirdArrayList = arrayListOf(3, 3, 1, 1, 2, 2, 4, 4, 5, 5)
+        val countArrayList = arrayListOf(0, 0, 0)
 
-        var firstStudentCount = 0
-        var secondStudentCount = 0
-        var thirdStudentCount = 0
-
-
-        for (i in 0 until answers.size) {
-            firstStudentCount =
-                    if (i >= 5) checkAnswer(firstStudentCount, answers[i], firstStudentAnswers[i%5])
-                    else checkAnswer(firstStudentCount, answers[i], firstStudentAnswers[i])
-
-            secondStudentCount =
-                    if (i >= 8) checkAnswer(secondStudentCount, answers[i], secondStudentAnswers[i%8])
-                    else checkAnswer(secondStudentCount, answers[i], secondStudentAnswers[i])
-
-            thirdStudentCount =
-                    if (i >= 10) checkAnswer(thirdStudentCount, answers[i], thirdStudentAnswers[i%10])
-                    else checkAnswer(thirdStudentCount, answers[i], thirdStudentAnswers[i])
+        for(i in 0 until answers.size) {
+            if(i>=5) {
+                if(firstArrayList[i%5] == answers[i])
+                    countArrayList[0]++
+            } else {
+                if(firstArrayList[i] == answers[i])
+                    countArrayList[0]++
+            }
+            if(i>=8) {
+                if(secondArrayList[i%8] == answers[i])
+                    countArrayList[1]++
+            } else {
+                if(secondArrayList[i] == answers[i])
+                    countArrayList[1]++
+            }
+            if(i>=10) {
+                if(thirdArrayList[i%10] == answers[i])
+                    countArrayList[2]++
+            } else {
+                if(thirdArrayList[i] == answers[i])
+                    countArrayList[2]++
+            }
         }
 
-        val max = Math.max(firstStudentCount, Math.max(secondStudentCount, thirdStudentCount))
+        var max = 0
 
-        if (max == firstStudentCount) answer.add(1)
-        if (max == secondStudentCount) answer.add(2)
-        if (max == thirdStudentCount) answer.add(3)
+        for(i in 0 until countArrayList.size) {
+            if(max < countArrayList[i]) {
+                max = countArrayList[i]
+                answer = arrayListOf(i+1)
+            }
+            else if(max == countArrayList[i]) {
+                answer.add(i+1)
+            }
+        }
 
         return answer.toIntArray()
     }
-
-    private fun checkAnswer(nowCount: Int, answer: Int, studentAnswer: Int): Int {
-        if (answer == studentAnswer)
-            return nowCount + 1
-
-        return nowCount
-    }
 }
 
+
 fun main(args: Array<String>) {
-    Solution().solution(intArrayOf(1,2,3,4,5)).forEach {
-        print(it)
-    }
 }
