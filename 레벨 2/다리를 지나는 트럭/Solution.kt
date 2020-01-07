@@ -1,33 +1,42 @@
-data class Truck(val weight: Int, var second: Int = 0)
+import java.util.*
 
 class Solution {
     fun solution(bridge_length: Int, weight: Int, truck_weights: IntArray): Int {
-        val cross = ArrayList<Truck>()
-        var cur_w = 0
         var time = 0
-        var idx = 0
+        var nowWeight = weight
+        val waitTruckQueue = LinkedList<Truck>()
+        val trucksOnBridge = ArrayList<Truck>()
 
-        while (!(cross.isEmpty() && idx >= truck_weights.size)) {
-
-            if (!cross.isEmpty()) {
-                for (truck in cross)
-                    ++truck.second
-
-                var front_truck = cross.first()
-
-                if (front_truck.second >= bridge_length) {
-                    cur_w -= front_truck.weight
-                    cross.removeAt(0)
-                }
-            }
-            if (idx < truck_weights.size && cur_w + truck_weights[idx] <= weight) {
-                cross.add(Truck(truck_weights[idx]))
-                cur_w += truck_weights[idx]
-                ++idx
-            }
-            time++
+        for (trucks in truck_weights) {
+            waitTruckQueue.add(Truck(trucks, bridge_length))
         }
 
+        while (waitTruckQueue.isNotEmpty() || trucksOnBridge.isNotEmpty()) {
+            if (trucksOnBridge.isNotEmpty() && trucksOnBridge.first().second <= 0) {
+                nowWeight += trucksOnBridge.first().weight
+                trucksOnBridge.removeAt(0)
+            }
+
+            if (waitTruckQueue.isNotEmpty() && nowWeight - waitTruckQueue.peek().weight >= 0) {
+                nowWeight -= waitTruckQueue.peek().weight
+                trucksOnBridge.add(waitTruckQueue.poll())
+            }
+
+            trucksOnBridge.forEach { item ->
+                item.second--
+            }
+
+            time++
+        }
         return time
     }
+
+}
+
+data class Truck(val weight: Int, var second: Int)
+
+
+fun main(args: Array<String>) {
+    print(Solution().solution(2, 10, intArrayOf(7, 4, 5, 6)))
+
 }
